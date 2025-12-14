@@ -15,7 +15,5 @@
         inherit system;
         modules = [ ./configuration.nix ];
       };
-
-      packages.${system}.${hostname} = self.nixosConfigurations.${hostname}.config.system.build.vm;
     };
 }
