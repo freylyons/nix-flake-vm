@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Build a given NixOS configuration as an executable VM";
 
   inputs = {
     myVMconf.url = "./../declare";

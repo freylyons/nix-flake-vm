@@ -5,14 +5,9 @@
 
   system.stateVersion = "24.05";
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-  };
-  
   users = {
     users = {
-      frey = {
+      testUser = {
         isNormalUser = true;
         extraGroups = [ "wheel" ];
         initialPassword = "1234";
