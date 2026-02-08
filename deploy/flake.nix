@@ -42,8 +42,24 @@
             virtualisation = {
               memorySize = 2000; # default: 1024    # adjust these values and open btop in the vm to see them change on rebuild
               cores = 4; # default: 1
+
+              qemu.options = [
+                # create 9P virtFS device inside the VM
+                "-virtfs local,mount_tag=share-mount,path=$SHARE_DIR,security_model=mapped-xattr"
+              ];
             };
           };
+
+          # enable 9P virtIO kernel modules
+          boot.kernelParams = [
+            "CONFIG_NET_9P=y"
+            "CONFIG_NET_9P_VIRTIO=y"
+            "CONFIG_9P_FS=y"
+            "CONFIG_9P_FS_POSIX_ACL=y"
+            "CONFIG_PCI=y"
+            "CONFIG_VIRTIO_PCI=y"
+          ];
+
         }
       ];
     };
