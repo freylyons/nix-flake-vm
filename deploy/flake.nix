@@ -47,6 +47,12 @@
                 # create 9P virtFS device inside the VM
                 "-virtfs local,mount_tag=share-mount,path=$SHARE_DIR,security_model=mapped-xattr"
               ];
+              
+              fileSystems."/mnt" = {
+                fsType = "9p";
+                device = "share-mount";
+                options = [ "trans=virtio" "version=9p2000.L" ];
+              };
             };
           };
 
