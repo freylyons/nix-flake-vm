@@ -42,12 +42,26 @@
             virtualisation = {
               memorySize = 2000; # default: 1024    # adjust these values and open btop in the vm to see them change on rebuild
               cores = 4; # default: 1
+            };
+          };
+        }
 
+
+        # virtFS configuration of share directory 
+        {
+          virtualisation.vmVariant = {
+            virtualisation = {
               qemu.options = [
                 # create 9P virtFS device inside the VM
+                # https://wiki.qemu.org/Documentation/9psetup#Starting_the_Guest_directly
                 "-virtfs local,mount_tag=share-mount,path=$SHARE_DIR,security_model=mapped-xattr"
+                # Note: we have included the $SHARE_DIR environment variable here, which needs to be passed to the VM executable
+                # at runtime to specify the path of the directory to mount into the guest on the host
               ];
               
+              # mount the $SHARE_DIR 
+              # QEMU docs command: `mount -t 9p -o trans=virtio [mount tag] [mount point] -oversion=9p2000.L`
+              # https://wiki.qemu.org/Documentation/9psetup#Mounting_the_shared_path
               fileSystems."/mnt" = {
                 fsType = "9p";
                 device = "share-mount";
@@ -57,6 +71,7 @@
           };
 
           # enable 9P virtIO kernel modules
+          # https://wiki.qemu.org/Documentation/9psetup#Preparation
           boot.kernelParams = [
             "CONFIG_NET_9P=y"
             "CONFIG_NET_9P_VIRTIO=y"
