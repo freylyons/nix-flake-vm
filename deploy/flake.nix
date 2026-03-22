@@ -46,6 +46,33 @@
           };
         }
 
+        # user space networking (for quick local/non-prod use)
+        {
+          # this config demonstrates how port-forwarding (DNAT) can be set up to access VM resources from `localhost`
+          # for actual production networking, it is recommended to use tap devices and set up interfaces, routes, and firewalls
+          #
+          # this implementation covers a common use case: SSH access to a dev/lab VM
+          # combine this with `-daemonize` and `-display none` QEMU options to get a fully headless process
+
+          # forward ports to the host 
+          virtualisation.vmVariant = {
+            virtualisation.forwardPorts = [
+              { from = "host"; host.port = 22; guest.port = 22; }
+            ];
+          };
+
+          # ssh daemon configuration 
+          services.openssh = {
+            enable = true;
+            settings = {
+              PermitRootLogin = "no";
+              PasswordAuthentication = true;  # check declare/configuration.nix for the `initialPassword` value. To use key authentication, set this to `false`
+                                              # and configure users.users.<name>..openssh.authorizedKeys.keys with your hypervisor's public key
+            };
+            ports = [ 22 ];
+          };
+        }
+
 
         # virtFS configuration of share directory 
         {
